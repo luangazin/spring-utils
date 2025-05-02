@@ -1,4 +1,4 @@
-Spring Utils
+# Spring Utils
 
 A Spring Boot utility library providing idempotency support for REST APIs using Redis cache.
 
