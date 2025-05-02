@@ -5,6 +5,7 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.web.context.request.RequestContextHolder
@@ -28,12 +29,18 @@ import java.util.*
 @Aspect
 @Component
 class IdempotencyAspect {
+    companion object {
+        @Suppress("JAVA_CLASS_ON_COMPANION")
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(javaClass.enclosingClass)
+    }
 
     @Autowired
     private lateinit var repository: IdempotencyRepository // Inject the Redis template
 
     @Around("@annotation(Idempotent) && execution(* *(..))")
     fun handleIdempotency(joinPoint: ProceedingJoinPoint): Any {
+        logger.trace("Idempotency aspect triggered")
         val methodSignature = joinPoint.signature as MethodSignature
         val idempotent = methodSignature.method.getAnnotation(Idempotent::class.java)!!
         val request = ((RequestContextHolder.getRequestAttributes() as ServletRequestAttributes).request)
@@ -42,18 +49,19 @@ class IdempotencyAspect {
             request.getHeader("Idempotency-Key")
                 ?: throw IdempotencyKeyNotFoundException("Idempotency-Key header is required")
         )
-
+        logger.trace("Idempotency-Key: {}", idempotencyKey)
         val cacheItem = repository.getCache(idempotencyKey)
         if (cacheItem.isPresent) {
+            logger.trace("Idempotency-Key found in cache: {}, return response", idempotencyKey)
             return cacheItem.get().response
         }
 
-        // If no cached response, proceed with the method execution
+        logger.trace("Idempotency-Key not found in cache: {}, proceed with method execution", idempotencyKey)
         val result = joinPoint.proceed()
 
         repository.save(idempotencyKey, IdempotencyCache(idempotencyKey, result, idempotent.cacheTimeSeconds))
 
-
+        logger.trace("Idempotency-Key saved in cache: {}.", idempotencyKey)
         return result
     }
 
