@@ -6,4 +6,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ImportAutoConfiguration(classes = [IdempotencyConfiguration::class])
-class SpringUtilsAutoConfiguration {}
+@Target(AnnotationTarget.ANNOTATION_CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class EnableSpringUtilsAutoConfiguration()
