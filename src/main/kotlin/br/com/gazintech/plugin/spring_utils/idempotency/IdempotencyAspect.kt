@@ -1,6 +1,7 @@
 package br.com.gazintech.plugin.spring_utils.idempotency
 
 import br.com.gazintech.plugin.spring_utils.exception.IdempotencyKeyNotFoundException
+import jakarta.annotation.PostConstruct
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
@@ -37,6 +38,11 @@ class IdempotencyAspect {
 
     @Autowired
     private lateinit var repository: IdempotencyRepository // Inject the Redis template
+
+    @PostConstruct
+    fun init() {
+        println("IdempotencyAspect initialized!")
+    }
 
     @Around("@annotation(Idempotent) && execution(* *(..))")
     fun handleIdempotency(joinPoint: ProceedingJoinPoint): Any {
