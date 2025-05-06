@@ -1,4 +1,4 @@
-package br.com.gazintech.plugin.spring_utils.idempotency
+package br.com.gazintech.plugin.spring_utils.api.idempotency
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)

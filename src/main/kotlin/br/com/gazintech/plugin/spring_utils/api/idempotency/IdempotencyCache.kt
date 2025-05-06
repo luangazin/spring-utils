@@ -1,4 +1,4 @@
-package br.com.gazintech.plugin.spring_utils.idempotency
+package br.com.gazintech.plugin.spring_utils.api.idempotency
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.redis.core.RedisHash
@@ -13,6 +13,4 @@ class IdempotencyCache(
     @JsonProperty(value = "response", required = true) val response: Any,
     @TimeToLive val expirationInSeconds: Long
 ) : Serializable {
-
-
 }

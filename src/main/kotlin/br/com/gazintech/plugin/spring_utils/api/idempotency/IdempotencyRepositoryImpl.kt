@@ -1,4 +1,4 @@
-package br.com.gazintech.plugin.spring_utils.idempotency
+package br.com.gazintech.plugin.spring_utils.api.idempotency
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
