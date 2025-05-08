@@ -1,5 +1,7 @@
 package br.com.gazintech.plugin.spring_utils.api.idempotency
 
+import org.springframework.context.annotation.Import
+
 /**
  * Created by IntelliJ IDEA.<br/>
  * User: luan-gazin<br/>
@@ -9,4 +11,5 @@ package br.com.gazintech.plugin.spring_utils.api.idempotency
  */
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
+@Import(IdempotencyConfiguration::class)
 annotation class EnableIdempotencyAutoConfiguration()

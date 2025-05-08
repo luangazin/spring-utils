@@ -1,5 +1,7 @@
 package br.com.gazintech.plugin.spring_utils.api.idempotency
 
+import br.com.gazintech.plugin.spring_utils.api.idempotency.repository.IdempotencyCache
+import br.com.gazintech.plugin.spring_utils.api.idempotency.repository.IdempotencyRepository
 import br.com.gazintech.plugin.spring_utils.exception.IdempotencyKeyNotFoundException
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around

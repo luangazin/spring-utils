@@ -1,5 +1,6 @@
-package br.com.gazintech.plugin.spring_utils.api.idempotency
+package br.com.gazintech.plugin.spring_utils.api.idempotency.repository
 
+import br.com.gazintech.plugin.spring_utils.api.idempotency.repository.IdempotencyCache
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisKeyValueTemplate
