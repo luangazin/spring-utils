@@ -74,4 +74,3 @@ The library throws `IdempotencyKeyNotFoundException` when:
 ## License
 
 This project is licensed under the MIT License.
-```

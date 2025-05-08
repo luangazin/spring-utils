@@ -1,5 +1,6 @@
-package br.com.gazintech.plugin.spring_utils.idempotency
+package br.com.gazintech.plugin.spring_utils.api.idempotency.repository
 
+import br.com.gazintech.plugin.spring_utils.api.idempotency.repository.IdempotencyCache
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisKeyValueTemplate
@@ -8,7 +9,11 @@ import java.util.*
 
 @Component
 class IdempotencyRepositoryImpl : IdempotencyRepository {
-    private val logger = LoggerFactory.getLogger(IdempotencyRepositoryImpl::class.java)
+    companion object {
+        @Suppress("JAVA_CLASS_ON_COMPANION")
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(javaClass.enclosingClass)
+    }
 
     @Autowired
     private lateinit var redisTemplate: RedisKeyValueTemplate
@@ -35,6 +40,9 @@ class IdempotencyRepositoryImpl : IdempotencyRepository {
 
     }
 
+    /**
+     * * Generates the Redis key for the idempotency key.
+     */
     private fun getRedisKey(idempotencyKey: UUID): String {
         return "idempotency:${idempotencyKey.toString()}"
     }
