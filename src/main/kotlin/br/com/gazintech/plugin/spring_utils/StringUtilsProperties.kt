@@ -1,7 +1,8 @@
 package br.com.gazintech.plugin.spring_utils
 
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.stereotype.Component
+import org.springframework.boot.context.properties.NestedConfigurationProperty
+import org.springframework.boot.context.properties.bind.DefaultValue
 
 /**
  * Created by IntelliJ IDEA.<br/>
@@ -10,21 +11,68 @@ import org.springframework.stereotype.Component
  * Time: 23:56<br/>
  * To change this template use File | Settings | File Templates.
  */
-@Component
 @ConfigurationProperties(prefix = "spring-utils")
-class StringUtilsProperties {
-    lateinit var idempotency: Idempotency
+data class SpringUtilsProperties(
+    @NestedConfigurationProperty
+    val cache: CacheProperties,
 
-    class Idempotency {
-        // Change from val to var to make it mutable
-        var enabled: Boolean = false
-        lateinit var cache: Cache
+    @NestedConfigurationProperty
+    val idempotency: IdempotencyProperties
+)
 
-        class Cache {
-            var bean: String = ""
-            var expiration: Long = 0L
-        }
-    }
-}
+data class CacheProperties(
+    @DefaultValue("false")
+    val enabled: Boolean,
+
+    @DefaultValue("redis")
+    val type: String,
+
+    @NestedConfigurationProperty
+    val redis: RedisProperties
+)
+
+data class RedisProperties(
+    @DefaultValue("localhost")
+    val host: String,
+
+    @DefaultValue("6379")
+    val port: Int,
+
+    @DefaultValue("")
+    val password: String,
+
+    @DefaultValue("0")
+    val index: Int,
+
+    @NestedConfigurationProperty
+    val poll: RedisPoolProperties
+)
+
+data class RedisPoolProperties(
+    @DefaultValue("1")
+    val minIdle: Int,
+
+    @DefaultValue("10")
+    val maxIdle: Int,
+
+    @DefaultValue("20")
+    val maxTotal: Int,
+
+    @DefaultValue("2000")
+    val maxWait: Long
+)
+
+data class IdempotencyProperties(
+    @DefaultValue("true")
+    val enabled: Boolean,
+
+    @NestedConfigurationProperty
+    val cache: IdempotencyCacheProperties
+)
+
+data class IdempotencyCacheProperties(
+    @DefaultValue("60000")
+    val expiration: Long
+)
 
 
