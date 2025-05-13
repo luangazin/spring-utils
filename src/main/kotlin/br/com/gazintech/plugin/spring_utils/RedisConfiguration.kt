@@ -1,6 +1,7 @@
 package br.com.gazintech.plugin.spring_utils
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
@@ -18,6 +19,11 @@ import java.time.Duration
 
 @Configuration
 class RedisConfiguration {
+    companion object {
+        @Suppress("JAVA_CLASS_ON_COMPANION")
+        @JvmStatic
+        private val logger = LoggerFactory.getLogger(javaClass.enclosingClass)
+    }
 
     @Autowired
     private lateinit var properties: SpringUtilsProperties
@@ -26,10 +32,11 @@ class RedisConfiguration {
     @Bean
     @ConditionalOnMissingBean(RedisConnectionFactory::class)
     fun lettuceConnectionFactory(): RedisConnectionFactory {
+        logger.trace("Creating Redis connection factory")
         val config = RedisStandaloneConfiguration()
         config.hostName = properties.cache.redis.host
         config.port = properties.cache.redis.port
-        if(properties.cache.redis.password.isNotEmpty()) {
+        if (properties.cache.redis.password.isNotEmpty()) {
             config.password = RedisPassword.of(properties.cache.redis.password)
         }
         config.setDatabase(properties.cache.redis.index) // Redis database index
@@ -43,7 +50,7 @@ class RedisConfiguration {
 
         val poolingClientConfig =
             LettucePoolingClientConfiguration.builder()
-                .commandTimeout(Duration.ofMillis(3000)) // Command timeout
+                .commandTimeout(Duration.ofMillis(properties.cache.redis.poll.commandTimeout)) // Command timeout
                 .poolConfig(poolConfig) // Set connection pool configuration
                 .build()
 

@@ -59,7 +59,10 @@ data class RedisPoolProperties(
     val maxTotal: Int,
 
     @DefaultValue("2000")
-    val maxWait: Long
+    val maxWait: Long,
+
+    @DefaultValue("3000")
+    val commandTimeout: Long
 )
 
 data class IdempotencyProperties(
