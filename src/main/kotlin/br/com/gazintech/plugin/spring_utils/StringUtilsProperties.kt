@@ -14,68 +14,44 @@ import org.springframework.boot.context.properties.bind.DefaultValue
 @ConfigurationProperties(prefix = "spring-utils")
 data class SpringUtilsProperties(
     @NestedConfigurationProperty
-    val cache: CacheProperties,
+    val cache: CacheProperties = CacheProperties(),
 
     @NestedConfigurationProperty
-    val idempotency: IdempotencyProperties
+    val idempotency: IdempotencyProperties = IdempotencyProperties()
 )
 
 data class CacheProperties(
-    @DefaultValue("false")
-    val enabled: Boolean,
-
-    @DefaultValue("redis")
-    val type: String,
-
+    val enabled: Boolean = false,
+    val type: String = "redis",
     @NestedConfigurationProperty
-    val redis: RedisProperties
+    val redis: RedisProperties = RedisProperties()
 )
 
 data class RedisProperties(
-    @DefaultValue("localhost")
-    val host: String,
-
-    @DefaultValue("6379")
-    val port: Int,
-
-    @DefaultValue("")
-    val password: String,
-
-    @DefaultValue("0")
-    val index: Int,
-
+    val host: String = "localhost",
+    val port: Int = 6379,
+    val password: String = "",
+    val index: Int = 0,
     @NestedConfigurationProperty
-    val poll: RedisPoolProperties
+    val poll: RedisPoolProperties = RedisPoolProperties()
 )
 
 data class RedisPoolProperties(
-    @DefaultValue("1")
-    val minIdle: Int,
-
-    @DefaultValue("10")
-    val maxIdle: Int,
-
-    @DefaultValue("20")
-    val maxTotal: Int,
-
-    @DefaultValue("2000")
-    val maxWait: Long,
-
-    @DefaultValue("3000")
-    val commandTimeout: Long
+    val minIdle: Int = 1,
+    val maxIdle: Int = 10,
+    val maxTotal: Int = 20,
+    val maxWait: Long = 2000,
+    val commandTimeout: Long = 3000
 )
 
 data class IdempotencyProperties(
-    @DefaultValue("true")
-    val enabled: Boolean,
-
+    val enabled: Boolean = true,
     @NestedConfigurationProperty
-    val cache: IdempotencyCacheProperties
+    val cache: IdempotencyCacheProperties = IdempotencyCacheProperties()
 )
 
 data class IdempotencyCacheProperties(
-    @DefaultValue("60000")
-    val expiration: Long
+    val expiration: Long = 60000
 )
 
 
