@@ -2,7 +2,6 @@ package br.com.gazintech.plugin.spring_utils
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.NestedConfigurationProperty
-import org.springframework.boot.context.properties.bind.DefaultValue
 
 /**
  * Created by IntelliJ IDEA.<br/>
@@ -18,7 +17,7 @@ data class SpringUtilsProperties(
 
     @NestedConfigurationProperty
     val idempotency: IdempotencyProperties = IdempotencyProperties()
-)
+){}
 
 data class CacheProperties(
     val enabled: Boolean = false,

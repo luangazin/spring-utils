@@ -2,8 +2,8 @@ package br.com.gazintech.plugin.spring_utils
 
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -16,23 +16,21 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import java.time.Duration
 
-
 @Configuration
-class RedisConfiguration {
+@ConditionalOnProperty(value = ["spring-utils.cache.enabled"], havingValue = "true", matchIfMissing = true)
+class RedisConfiguration(
+    var properties: SpringUtilsProperties
+) {
     companion object {
         @Suppress("JAVA_CLASS_ON_COMPANION")
         @JvmStatic
         private val logger = LoggerFactory.getLogger(javaClass.enclosingClass)
     }
 
-    @Autowired
-    private lateinit var properties: SpringUtilsProperties
-
-
     @Bean
     @ConditionalOnMissingBean(RedisConnectionFactory::class)
     fun lettuceConnectionFactory(): RedisConnectionFactory {
-        logger.trace("Creating Redis connection factory")
+        logger.info("Creating Redis connection factory")
         val config = RedisStandaloneConfiguration()
         config.hostName = properties.cache.redis.host
         config.port = properties.cache.redis.port
@@ -60,6 +58,7 @@ class RedisConfiguration {
     @Bean
     @ConditionalOnMissingBean(RedisTemplate::class)
     fun redisTemplate(redisConnectionDetailsForRedis: RedisConnectionFactory): RedisTemplate<String, Any> {
+        logger.info("Creating Redis connection details")
         return RedisTemplate<String, Any>().apply {
             connectionFactory = redisConnectionDetailsForRedis
             keySerializer = StringRedisSerializer()
