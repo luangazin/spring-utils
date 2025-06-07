@@ -28,7 +28,6 @@ class RedisConfiguration {
     @Autowired
     private lateinit var properties: SpringUtilsProperties
 
-
     @Bean
     @ConditionalOnMissingBean(RedisConnectionFactory::class)
     fun lettuceConnectionFactory(): RedisConnectionFactory {
